@@ -1,15 +1,35 @@
+interact('.draggable')
+.draggable({
+  // enable inertial throwing
+  inertia: true,
+  // keep the element within the area of it's parent
+  restrict: {
+    restriction: "parent",
+    endOnly: true,
+    elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+  },
+  // enable autoScroll
+  autoScroll: true,
 
-window.onload = () => {
-  var myElement = document.getElementById('circle');
+  // call this function on every dragmove event
+  onmove: dragMoveListener
+});
 
-  // create a simple instance
-  // by default, it only adds horizontal recognizers
-  var mc = new Hammer(myElement);
-  mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+function dragMoveListener (event) {
+  var target = event.target,
+      // keep the dragged position in the data-x/data-y attributes
+      x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+      y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-  // listen to events...
-  mc.on("panright", function(ev) {
-    myElement.style.transform = 'translate(' + ev.deltaX + 'px,' + ev.deltaY + 'px)'    
-  });
-  
+  // translate the element
+  target.style.webkitTransform =
+  target.style.transform =
+    'translate(' + x + 'px, ' + y + 'px)';
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
 }
+
+// this is used later in the resizing and gesture demos
+window.dragMoveListener = dragMoveListener;
