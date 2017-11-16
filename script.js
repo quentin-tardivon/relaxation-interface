@@ -8,12 +8,8 @@ window.onload = () => {
   mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
   // listen to events...
-  mc.on("panleft panright", function(ev) {
-      myElement.style.transform = 'translateX(' + ev.deltaX + 'px)'    
-  });
-
-  mc.on("panup pandown", function(ev) {  
-    myElement.style.transform = 'translateY(' + ev.deltaY + 'px)'
+  mc.on("panright", function(ev) {
+    myElement.style.transform = 'translate(' + ev.deltaX + 'px,' + ev.deltaY + 'px)'    
   });
   
 }
