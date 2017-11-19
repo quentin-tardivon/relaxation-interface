@@ -1,3 +1,40 @@
+// create web audio api context
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioCtx = new AudioContext();
+
+// create Oscillator and gain node
+var gainNode = audioCtx.createGain();
+
+function getData() {
+  source = audioCtx.createBufferSource();
+  request = new XMLHttpRequest();
+
+  request.open('GET', 'sounds/ocean.mp3', true);
+
+  request.responseType = 'arraybuffer';
+
+
+  request.onload = function() {
+    var audioData = request.response;
+
+    audioCtx.decodeAudioData(audioData, function(buffer) {
+        myBuffer = buffer;
+        songLength = buffer.duration;
+        source.buffer = myBuffer;
+        source.connect(audioCtx.destination);
+        source.loop = true;
+        source.start(0)
+      },
+
+      function(e){"Error with decoding audio data" + e.err});
+  }
+
+  request.send();
+}
+
+getData()
+
+
 interact('.draggable')
 .draggable({
   // enable inertial throwing
@@ -54,4 +91,6 @@ interact('.tap-target')
   toggleFullScreen()
   event.preventDefault();
 })
+
+
 
